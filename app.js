@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+require('dotenv').config();
 
 const app = express();
 
@@ -11,6 +12,6 @@ app.get('/', (req, res, next) => {
 });
 
 
-app.listen(8040, () => {
-    console.log(`listening port ${8040}`);
+app.listen(process.env.PORT, () => {
+    console.log(`listening port ${process.env.PORT}`);
 });
