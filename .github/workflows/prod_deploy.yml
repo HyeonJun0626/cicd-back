@@ -35,10 +35,6 @@ jobs:
         run: tar -cpvzf ./$GITHUB_SHA.tgz *
         shell: bash
 
-      - name: Make tar file
-        run: tar -cpvzf ./$GITHUB_SHA.tgz *
-        shell: bash
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
