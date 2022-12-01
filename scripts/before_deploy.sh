@@ -1,6 +1,4 @@
 #!/bin/bash
-REPOSITORY=/home/ec2-user
-cd $REPOSITORY
+cd ~/
 
 pm2 delete all
-rm -rf cicd-back
