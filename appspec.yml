@@ -3,9 +3,9 @@ os: linux
 
 files:
   - source: /
-    destination: ~/cicd-back
+    destination: /home/ec2-user/cicd-back
 permissions:
-  - object: ~/ec2-user/
+  - object: /home/ec2-user/
     pattern: '**'
 hooks:
   BeforeInstall:
