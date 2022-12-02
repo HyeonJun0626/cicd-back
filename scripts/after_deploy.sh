@@ -1,5 +1,5 @@
 #!/bin/bash
-REPOSITORY=/home/ubuntu/cicd-back
+REPOSITORY=~/cicd-back/
 cd $REPOSITORY
 
 npm start
