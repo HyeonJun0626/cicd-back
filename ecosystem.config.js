@@ -2,7 +2,7 @@ module.exports = {
     apps: [{
         name: 'cicd-back',
         script: './app.js',
-        instances: 0,
+        instances: 2,
         exec_mode: 'cluster'
     }]
 }
