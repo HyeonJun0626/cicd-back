@@ -13,5 +13,5 @@ app.get('/', (req, res, next) => {
 
 
 app.listen(process.env.PORT, () => {
-    console.log(`listening port ${process.env.PORT}`);
+    console.log(`listening port ${process.env.PORT}\nJWT_SECRET ${process.env.JWT_SECRET}`);
 });

@@ -25,11 +25,8 @@ jobs:
         run: npm install
 
       - name: Create env file
-        working-directory: ./
         run: |
-          touch .env	
-          cat << EOF >> .env	
-          ${{ secrets.ENV }}
+          echo "${{ secrets.ENV_FILE }}" > .env
 
       - name: Make tar file
         run: tar -cpvzf ./$GITHUB_SHA.tgz *
