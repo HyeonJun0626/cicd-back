@@ -14,7 +14,7 @@ jobs:
         deploy-group: [ 'prod' ] # dev, prod, staging 등 code deploy application 의 사용할 배포
         deploy-config-name: ['CodeDeployDefault.AllAtOnce'] # code deploy application 배포그룹의 배포구성 설정 정보
         s3-bucket: [ 'hyeon-cicd-bucket' ]
-        s3-filename: ['cicd-back/prod/${{ github.sha }}']
+        s3-filename: [ 'staging-cicd-back-${{ github.sha }}' ]
 
     steps:
       - name: Checkout source code.
@@ -35,35 +35,25 @@ jobs:
       - name: Make tar file
         run: tar -cpvzf ./$GITHUB_SHA.tgz *
         shell: bash
-  deploy:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        project-name: 'cicd-back'
-        deploy-group: [ 'cicd' ] # dev, prod, staging 등
-        s3-bucket: [ 'hyeon-cicd-bucket' ]
-        s3-filename: ['staging-cicd-back-${{ github.sha }}']
 
-      needs: buildOrMakeTar
-      steps:
-        - name: Configure AWS credentials
-          uses: aws-actions/configure-aws-credentials@v1
-          with:
-            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            aws-region: ap-northeast-2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
 
-        - name: Upload to S3
-          run: |
-            aws s3 cp \
-              --region ap-northeast-2 \
-              ./$GITHUB_SHA.tgz s3://${{ matrix.s3-bucket }}/${{ matrix.project-name }}.tgz
+      - name: Upload to S3
+        run: |
+          aws s3 cp \
+            --region ap-northeast-2 \
+            ./$GITHUB_SHA.tgz s3://${{ matrix.s3-bucket }}/${{ matrix.project-name }}.tgz
 
-        - name: Code Deploy
-          run: |
-            aws deploy create-deployment \
-            --application-name ${{ matrix.deploy-app-name }} \
-            --file-exists-behavior OVERWRITE \
-            --deployment-config-name ${{ matrix.deploy-config-name }} \
-            --deployment-group-name ${{ matrix.deploy-group }} \
-            --s3-location bucket=${{ matrix.s3-bucket }},key=${{ matrix.project-name }}.tgz,bundleType=tgz
+      - name: Code Deploy
+        run: |
+          aws deploy create-deployment \
+          --application-name ${{ matrix.deploy-app-name }} \
+          --file-exists-behavior OVERWRITE \
+          --deployment-config-name ${{ matrix.deploy-config-name }} \
+          --deployment-group-name ${{ matrix.deploy-group }} \
+          --s3-location bucket=${{ matrix.s3-bucket }},key=${{ matrix.project-name }}.tgz,bundleType=tgz
