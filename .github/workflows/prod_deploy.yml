@@ -1,16 +1,20 @@
 name: cicd deploy test
-env:
-  PROJECT_NAME: cicd-back
 on:
   push:
     branches: main
 jobs:
-  build:
+  buildOrMakeTar:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         node-version: [ 16.18.1 ]
+        project-name: ['cicd-back']
+        deploy-app-name: ['cicd-code-deploy'] # code deploy 생성 시 작성한 application name
+        deploy-group: [ 'prod' ] # dev, prod, staging 등 code deploy application 의 사용할 배포
+        deploy-config-name: ['CodeDeployDefault.AllAtOnce'] # code deploy application 배포그룹의 배포구성 설정 정보
+        s3-bucket: [ 'hyeon-cicd-bucket' ]
+        s3-filename: ['cicd-back/prod/${{ github.sha }}']
 
     steps:
       - name: Checkout source code.
@@ -31,19 +35,37 @@ jobs:
       - name: Make tar file
         run: tar -cpvzf ./$GITHUB_SHA.tgz *
         shell: bash
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project-name: 'cicd-back'
+        deploy-group: [ 'cicd' ] # dev, prod, staging 등
+        s3-bucket: [ 'hyeon-cicd-bucket' ]
+        s3-filename: ['staging-cicd-back-${{ github.sha }}']
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-2
+      needs: buildOrMakeTar
+      steps:
+        - name: Checkout source code.
+          uses: actions/checkout@v3
+        - name: Configure AWS credentials
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: ap-northeast-2
 
-      - name: Upload to S3
-        run: |
-          aws s3 cp \
-            --region ap-northeast-2 \
-            ./$GITHUB_SHA.tgz s3://hyeon-cicd-bucket/$PROJECT_NAME/$GITHUB_SHA.tgz
+        - name: Upload to S3
+          run: |
+            aws s3 cp \
+              --region ap-northeast-2 \
+              ./$GITHUB_SHA.tgz s3://${{ matrix.s3-bucket }}/${{ matrix.project-name }}.tgz
 
-      - name: Code Deploy
-        run: aws deploy create-deployment --application-name cicd-code-deploy --file-exists-behavior OVERWRITE --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name cicd --s3-location bucket=hyeon-cicd-bucket,bundleType=tgz,key=$PROJECT_NAME/$GITHUB_SHA.tgz
+        - name: Code Deploy
+          run: |
+            aws deploy create-deployment \
+            --application-name ${{ matrix.deploy-app-name }} \
+            --file-exists-behavior OVERWRITE \
+            --deployment-config-name ${{ matrix.deploy-config-name }} \
+            --deployment-group-name ${{ matrix.deploy-group }} \
+            --s3-location bucket=${{ matrix.s3-bucket }},key=${{ matrix.project-name }}.tgz,bundleType=tgz
