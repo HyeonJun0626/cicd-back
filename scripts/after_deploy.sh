@@ -5,4 +5,5 @@ export NVM_DIR="$HOME/.nvm"
 REPOSITORY=/home/ec2-user/cicd-back/
 cd $REPOSITORY
 
-pm2 reload all
+#pm2 reload all
+npm start
