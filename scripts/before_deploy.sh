@@ -7,4 +7,4 @@ export NVM_DIR="$HOME/.nvm"
 REPOSITORY=/home/ec2-user/cicd-back/
 cd $REPOSITORY
 
-pm2 delete all
+#pm2 delete all
