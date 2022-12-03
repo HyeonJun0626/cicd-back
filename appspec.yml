@@ -10,8 +10,8 @@ permissions:
 hooks:
   BeforeInstall:
     - location: scripts/before_deploy.sh
-      runas: root
+      runas: ec2-user
   AfterInstall:
     - location: scripts/after_deploy.sh
-      runas: root
+      runas: ec2-user
 
