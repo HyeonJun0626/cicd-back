@@ -30,7 +30,7 @@ jobs:
 
       - name: Create env file
         run: |
-          echo ${{ secrets.ENV }} | tee .env
+          echo "${{ secrets.ENV }}" | tee .env
           cat .env
         shell: bash
 
