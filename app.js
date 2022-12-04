@@ -7,6 +7,7 @@ const app = express();
 app.use(cors());
 
 
+// ========== PM2 무중단 관련 ==========
 let isDisableKeepAlive = false
 app.use(function(req, res, next) {
     if (isDisableKeepAlive) {
@@ -16,7 +17,7 @@ app.use(function(req, res, next) {
 });
 
 app.get('/', (req, res, next) => {
-    return res.status(200).send('hello 2');
+    return res.status(200).send('hello 10');
 });
 
 
@@ -25,6 +26,8 @@ app.listen(process.env.PORT, () => {
     console.log(`Listening PORT ${process.env.PORT}\nJWT_SECRET ${process.env.JWT_SECRET}`);
 });
 
+// ========== PM2 무중단 관련 ==========
+// SIGINT 받으면 이후 들어오는 요청 차단
 process.on('SIGINT', function () {
     isDisableKeepAlive = true;
     app.close(function () {
