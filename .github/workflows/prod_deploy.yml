@@ -33,6 +33,7 @@ jobs:
           pwd
           echo "${{ secrets.ENV }}" > .env
           cat .env
+          chmod 400 .env
         shell: bash
 
       - name: Make tar file
