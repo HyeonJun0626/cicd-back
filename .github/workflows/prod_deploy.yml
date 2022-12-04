@@ -32,6 +32,7 @@ jobs:
         run: |
           echo ${{ secrets.ENV }} | tee .env
           cat .env
+        shell: bash
 
       - name: Make tar file
         run: tar -cpvzf ./$GITHUB_SHA.tgz *
