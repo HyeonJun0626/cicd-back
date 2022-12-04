@@ -29,13 +29,10 @@ jobs:
         run: npm install
 
       - name: Create env file
-        uses: SpicyPizza/create-envfile@v1.3
-        with:
-          envkey_DEBUG: false
-          envkey_PORT: ${{ secrets.PORT }}
-          envkey_JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          file_name: .env
-          fail_on_empty: false
+        run: |
+          echo ${{ secrets.PORT }} >> .env
+          echo ${{ secrets.JWT_SECRET }} >> .env
+          cat .env
 
       - name: Make tar file
         run: tar -cpvzf ./$GITHUB_SHA.tgz *
