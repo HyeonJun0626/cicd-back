@@ -8,12 +8,12 @@ app.use(cors());
 
 
 app.get('/', (req, res, next) => {
-    return res.status(200).send('hello 2');
+    return res.status(200).send('hello 1');
 });
 
 
 app.listen(process.env.PORT, () => {
     console.log('========== START ==========');
     console.log(`listening port ${process.env.PORT}\nJWT_SECRET ${process.env.JWT_SECRET}`);
-    console.log('========== END ==========');
+    console.log('========== END ==========1');
 });
