@@ -7,16 +7,28 @@ const app = express();
 app.use(cors());
 
 
-app.get('/', (req, res, next) => {
-    setTimeout(() => {
+let isDisableKeepAlive = false
+app.use(function(req, res, next) {
+    if (isDisableKeepAlive) {
+        res.set('Connection', 'close');
+    }
+    next();
+});
 
-    }, 1000);
-    return res.status(200).send('hello 10');
+app.get('/', (req, res, next) => {
+    return res.status(200).send('hello 1');
 });
 
 
 app.listen(process.env.PORT, () => {
-    console.log('========== START ==========');
-    console.log(`listening port ${process.env.PORT}\nJWT_SECRET ${process.env.JWT_SECRET}`);
-    console.log('========== END ==========1');
+    process.send('ready');
+    console.log(`Listening PORT ${process.env.PORT}\nJWT_SECRET ${process.env.JWT_SECRET}`);
 });
+
+process.on('SIGINT', function () {
+    isDisableKeepAlive = true;
+    app.close(function () {
+        console.log('Server Closed');
+        process.exit(0);
+    });
+})
