@@ -5,4 +5,5 @@ export NVM_DIR="$HOME/.nvm"
 REPOSITORY=/home/ec2-user/cicd-back/
 cd $REPOSITORY
 
+pm2 save
 pm2 reload ecosystem.config.js
