@@ -6,4 +6,3 @@ REPOSITORY=/home/ec2-user/cicd-back/
 cd $REPOSITORY
 
 pm2 reload ecosystem.config.js
-#npm start
