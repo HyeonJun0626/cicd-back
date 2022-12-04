@@ -8,6 +8,9 @@ app.use(cors());
 
 
 app.get('/', (req, res, next) => {
+    setTimeout(() => {
+
+    }, 1000);
     return res.status(200).send('hello 10');
 });
 
