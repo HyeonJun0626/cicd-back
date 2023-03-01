@@ -19,7 +19,7 @@ fi
 
 if pm2 list | grep -q "cicd-back"
 then
-    pm2 reload ecosystem.config.js
+    pm2 reload ecosystem.config.js --time
 else
-    pm2 start ecosystem.config.js
+    pm2 start ecosystem.config.js --time
 fi

@@ -4,6 +4,7 @@ module.exports = {
         script: './app.js',
         instances: 2, // 코어 2개 사용,  0 = 최대 코어 사용
         exec_mode: 'cluster',
+        merge_logs: true, // 클러스터 모드 사용 시 각 클러스터에서 생성되는 로그를 한 파일로 합쳐준다.
 
         // pm2 reload 시 서비스 중단 발생할 경우 =====
         wait_ready: true, // express app 구동 완료 시 마스터 프로세스에게 보낼 ready 이벤트를 기다리게 함 (app.js 파일 app.listen 에서 process.send('ready') 이벤트 보냄)
