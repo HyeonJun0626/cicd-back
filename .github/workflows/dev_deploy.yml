@@ -34,7 +34,6 @@ jobs:
           pwd
           touch .env
           echo PORT=${{ secrets.PORT }} >> .env
-#          echo "${{ secrets.ENV }}" >> .env
           cat .env
         shell: bash
 
