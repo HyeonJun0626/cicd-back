@@ -29,8 +29,11 @@ jobs:
         run: npm install
 
       - name: Create env file # step 성공은 하지만 인스턴스에 .env 생성 안되는 문제 있음
+        working-directory: ./
         run: |
-          echo "${{ secrets.ENV }}" > .env
+          pwd
+          touch .env
+          echo "${{ secrets.ENV }}" >> .env
           cat .env
         shell: bash
 
