@@ -8,7 +8,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [ 16.18.1 ]
+        node-version: [ 16.19.1 ]
         project-name: ['cicd-back']
         deploy-app-name: ['playground-cd'] # code deploy 생성 시 작성한 application name
         deploy-group: [ 'cicd-back-dev' ] # dev, prod, staging 등 code deploy application에서 생성한 배포그룹 이름
@@ -33,13 +33,13 @@ jobs:
         run: |
           pwd
           touch .env
-          echo PORT=${{ secrets.PORT }} >> .env
+          echo "${{ secrets.ENV }}" >> .env
           cat .env
         shell: bash
 
       - name: Make tar file
         run: |
-          tar -cpvzf ./$GITHUB_SHA.tgz *
+          tar -cpvzf ./$GITHUB_SHA.tgz .env *
         shell: bash
 
       - name: Configure AWS credentials
