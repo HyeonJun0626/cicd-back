@@ -7,5 +7,5 @@ export NVM_DIR="$HOME/.nvm"
 #cd $REPOSITORY
 
 cd /var/
-mkdir -p /www/cicd-back && cd /www/cicd-back
+sudo mkdir -p /www/cicd-back && cd /www/cicd-back
 #pm2 delete all
