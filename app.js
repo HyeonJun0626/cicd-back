@@ -20,10 +20,16 @@ app.get('/', (req, res, next) => {
     return res.status(200).send('hello 10');
 });
 
+app.get('/v1/user', (req, res, next) => {
+    let number = Math.round(Math.random() * (100 - 1) + 1);
+    return res.status(200).json({ name: 'Hyeon', age: number });
+});
+
 
 app.listen(process.env.PORT, () => {
     process.send('ready');
-    console.log(`Listening PORT ${process.env.PORT}\nJWT_SECRET ${process.env.JWT_SECRET}`);
+    console.log(`Listening PORT ${process.env.PORT}`);
+    console.log(`JWT secret : ${process.env.JWT_SECRET}`);
 });
 
 // ========== PM2 무중단 관련 ==========

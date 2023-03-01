@@ -10,11 +10,11 @@ jobs:
       matrix:
         node-version: [ 16.18.1 ]
         project-name: ['cicd-back']
-        deploy-app-name: ['cicd-code-deploy'] # code deploy 생성 시 작성한 application name
-        deploy-group: [ 'prod' ] # dev, prod, staging 등 code deploy application에서 생성한 배포그룹 이름
+        deploy-app-name: ['playground-cd'] # code deploy 생성 시 작성한 application name
+        deploy-group: [ 'cicd-back-dev' ] # dev, prod, staging 등 code deploy application에서 생성한 배포그룹 이름
         deploy-config-name: ['CodeDeployDefault.AllAtOnce'] # code deploy application 배포그룹의 배포구성 설정 정보
-        s3-bucket: [ 'hyeon-cicd-bucket' ]
-        s3-file-key: [ 'cicd-back/prod/${{ github.sha }}' ]
+        s3-bucket: [ 'play-deploy-bucket' ]
+        s3-file-key: [ 'cicd-back/dev/${{ github.sha }}' ]
 
     steps:
       - name: Checkout source code.
@@ -28,14 +28,16 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Create env file # step 성공은 하지만 인스턴스에 .env 반영 안됨..
+      - name: Create env file # step 성공은 하지만 인스턴스에 .env 생성 안되는 문제 있음
         run: |
           echo "${{ secrets.ENV }}" > .env
           cat .env
         shell: bash
 
       - name: Make tar file
-        run: tar -cpvzf ./$GITHUB_SHA.tgz *
+        run: |
+          cp .env ./
+          tar -cpvzf ./$GITHUB_SHA.tgz *
         shell: bash
 
       - name: Configure AWS credentials
