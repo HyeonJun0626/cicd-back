@@ -36,7 +36,6 @@ jobs:
 
       - name: Make tar file
         run: |
-          cp -f .env ./
           tar -cpvzf ./$GITHUB_SHA.tgz *
         shell: bash
 
